@@ -1,0 +1,19 @@
+[flake8]
+
+# Basic configuration
+max-line-length = 120
+exclude = __init__.py,migrations/*,tests/*
+ignore = E203,E402  # Ignore specific warnings (adjust as needed)
+
+# PEP 8 style guide
+# Note: You can adjust some options here based on your preferences
+select = E,W
+max-complexity = 10
+
+# Docstrings
+docstring-min-length = 1
+docstring-convention = numpy
+
+# Imports
+# Note: You can adjust some options here based on your preferences
+import-order = builtins, future, standard_library, third-party, local
