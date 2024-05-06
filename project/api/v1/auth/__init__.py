@@ -1,4 +1,3 @@
-from .core import auth_core_blueprint
+from .core import bp
 
-auth_blueprints = [auth_core_blueprint]
-auth_blueprints = [auth_core_blueprint]
+auth_blueprints = [bp]

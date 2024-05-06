@@ -9,8 +9,7 @@ data_generator = Person('en')
 data_generator_text = Text()
 
 
-def add_user(role: UserRole = UserRole.USER,
-             email: str = None,
+def add_user(email: str = None,
              username: str = None,
              password: str = None,
              created_at: datetime = None,
@@ -33,15 +32,13 @@ def add_user(role: UserRole = UserRole.USER,
                 username=username,
                 password=password,
                 name=name,
-                created_at=created_at,
-                role=role)
+                created_at=created_at)
     db.session.add(user)
     db.session.commit()
     return user
 
 
-def add_user_password(role: UserRole = UserRole.USER,
-                      email: str = None,
+def add_user_password(email: str = None,
                       username: str = None,
                       password: str = None,
                       created_at: datetime = None,
@@ -64,8 +61,7 @@ def add_user_password(role: UserRole = UserRole.USER,
                 username=username,
                 password=password,
                 name=name,
-                created_at=created_at,
-                role=role)
+                created_at=created_at)
     db.session.add(user)
     db.session.commit()
     return user, password

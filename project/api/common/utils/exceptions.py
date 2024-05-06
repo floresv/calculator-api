@@ -37,8 +37,8 @@ class ValidationException(InvalidPayloadException):
 
     def __init__(self, e: ValidationError, message: str = 'Validation Error'):
         payload = dict({'message': 'validation errors',
-                   'errors': [{'field': error['loc'][0], 'message': error['msg']}
-                              for error in e.errors()]})
+                        'errors': [{'field': error['loc'][0], 'message': error['msg']}
+                                   for error in e.errors()]})
         super().__init__(message=message, payload=payload)
 
 

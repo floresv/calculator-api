@@ -6,7 +6,7 @@ class UserRegister(BaseModel):
     username: str
     password: str
     status: str
-    active = False
+    # active = False
 
     @validator('username')
     def validate_username(cls, username):

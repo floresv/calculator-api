@@ -1,7 +1,8 @@
 from flask import jsonify, json, current_app
 from werkzeug.exceptions import NotFound, Unauthorized, Forbidden, MethodNotAllowed, NotImplemented, BadRequest
-from ...api.common.utils.exceptions import APIException, ServerErrorException, NotFoundException, UnauthorizedException, \
-    ForbiddenException, MethodNotAllowedException, NotImplementedException, BadRequestException
+from ...api.common.utils.exceptions import APIException, ServerErrorException, NotFoundException, \
+    UnauthorizedException, ForbiddenException, MethodNotAllowedException, NotImplementedException, BadRequestException
+
 
 def handle_exception(error: APIException):
     """
@@ -12,12 +13,14 @@ def handle_exception(error: APIException):
     response.status_code = error.status_code
     return response
 
+
 def handle_general_exception(e):
     """
     Handle general exceptions
     """
     # current_app.logger.debug(e)
     return handle_exception(ServerErrorException())
+
 
 def handle_werkzeug_exception(e):
     """
