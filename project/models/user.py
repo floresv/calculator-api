@@ -24,7 +24,7 @@ class User(Base):
         self,
         username: str,
         password: str | None = None,
-        status: bool = True,
+        status: int = 1,
         created_at: datetime = datetime.now(),
         updated_at: datetime = datetime.now(),
     ):

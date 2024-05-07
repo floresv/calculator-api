@@ -1,13 +1,30 @@
-from flask import jsonify, Blueprint
+from flask import request, current_app, jsonify, Blueprint
 from flask.views import MethodView
 
 from ..base import BaseAPI
 from ....models.user import User
 from ...common.utils.exceptions import NotImplementedException
+from .... import db
 
-user_blueprint = Blueprint("user", __name__)
+bp = Blueprint("user", __name__)
 
 
-@user_blueprint.route("/test", methods=["GET"])
-def test():
-    return jsonify({"message": "test"})
+@bp.route("/users", methods=["POST"])
+def signup():
+    data = request.get_json()
+
+    if not data or not data.get('username') or not data.get('password'):
+        return jsonify({'error': 'Missing username or password'}), 400
+
+    username = data['username']
+    password = data['password']
+
+    existing_user = User.query.filter_by(username=username).first()
+    if existing_user:
+        return jsonify({'error': 'Username already exists'}), 400
+
+    user = User(username, password)
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({'message': 'User created successfully'}), 201
