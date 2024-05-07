@@ -12,6 +12,7 @@ class User(Base):
     """
     User model
     """
+
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(128), unique=True, nullable=False)
@@ -19,12 +20,14 @@ class User(Base):
     status = db.Column(db.Integer, default=True, nullable=False)
     token_hash = db.Column(db.String(255), nullable=True)
 
-    def __init__(self,
-                 username: str,
-                 password: str | None = None,
-                 status: bool = True,
-                 created_at: datetime = datetime.now(),
-                 updated_at: datetime = datetime.now()):
+    def __init__(
+        self,
+        username: str,
+        password: str | None = None,
+        status: bool = True,
+        created_at: datetime = datetime.now(),
+        updated_at: datetime = datetime.now(),
+    ):
         super().__init__(created_at, updated_at)
         self.username = username
         self.set_password(password)
@@ -35,11 +38,11 @@ class User(Base):
         Get user data in JSON format
         """
         return {
-            'id': self.id,
-            'username': self.username,
-            'status': self.status,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at
+            "id": self.id,
+            "username": self.username,
+            "status": self.status,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
         }
 
     def set_password(self, password):

@@ -3,9 +3,12 @@ from datetime import datetime
 from flask import current_app
 from sqlalchemy import exc
 
-from ....api.common.utils.exceptions import ServerErrorException, \
-    InvalidPayloadException, NotFoundException, \
-    ValidationException
+from ....api.common.utils.exceptions import (
+    ServerErrorException,
+    InvalidPayloadException,
+    NotFoundException,
+    ValidationException,
+)
 
 
 @contextmanager
@@ -16,8 +19,7 @@ def session_scope(session):
     try:
         yield session
         session.commit()
-    except (InvalidPayloadException, NotFoundException,
-            ValidationException) as e:
+    except (InvalidPayloadException, NotFoundException, ValidationException) as e:
         session.rollback()
         raise e
     except exc.SQLAlchemyError:
@@ -29,7 +31,7 @@ def get_date(date: str) -> datetime:
     """
     Convert str to date in a specific format
     """
-    date_format = current_app.config.get('DATE_FORMAT')
+    date_format = current_app.config.get("DATE_FORMAT")
     if date_format is not None:
         return datetime.strptime(date, date_format)
     else:
@@ -40,7 +42,7 @@ def get_date_str(date: datetime) -> str:
     """
     Convert date to str in a specific format
     """
-    date_format = current_app.config.get('DATE_FORMAT')
+    date_format = current_app.config.get("DATE_FORMAT")
     if date_format is not None:
         return date.strftime(date_format)
     else:

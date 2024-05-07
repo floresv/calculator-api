@@ -8,10 +8,10 @@ class UserRegister(BaseModel):
     status: str
     # active = False
 
-    @validator('username')
+    @validator("username")
     def validate_username(cls, username):
         if User.exists(User.username == username):
-            raise ValueError('username already exists')
+            raise ValueError("username already exists")
         return username
 
 

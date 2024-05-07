@@ -9,13 +9,7 @@ import unittest
 
 cli = FlaskGroup(app)
 
-COV = coverage.coverage(
-    branch=True,
-    include='project/*',
-    omit=[
-        'project/static/*'
-    ]
-)
+COV = coverage.coverage(branch=True, include="project/*", omit=["project/static/*"])
 COV.start()
 
 
@@ -45,8 +39,8 @@ def seed_db() -> None:
     """
     Seed the database
     """
-    user1 = User(username='admin', password="password")
-    user2 = User(username='user', password="password")
+    user1 = User(username="admin", password="password")
+    user2 = User(username="user", password="password")
     db.session.add(user1)
     db.session.add(user2)
     db.session.commit()
@@ -57,12 +51,12 @@ def cov() -> int:
     """
     Run the unit tests with coverage
     """
-    tests = unittest.TestLoader().discover('tests')
+    tests = unittest.TestLoader().discover("tests")
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():
         COV.stop()
         COV.save()
-        print('Coverage Summary:')
+        print("Coverage Summary:")
         COV.report()
         COV.html_report()
         COV.erase()

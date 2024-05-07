@@ -38,12 +38,13 @@ def create_app():
 
     blueprints = [*auth_blueprints, *user_blueprints]
     for blueprint in blueprints:
-        app.register_blueprint(blueprint, url_prefix='/v1')
+        app.register_blueprint(blueprint, url_prefix="/v1")
 
     # make url_for('index') == url_for('blog.index')
     # app.add_url_rule("/", endpoint="index")
 
     return app
+
 
 def is_database_connected():
     """
@@ -58,6 +59,7 @@ def is_database_connected():
         print(f"Database connection error: {e}")
     return False
 
+
 # register error handlers
 from werkzeug.exceptions import HTTPException
 
@@ -66,11 +68,13 @@ from .api.common import error_handlers
 
 app = create_app()
 
+
 @app.route("/")
 def hello():
     return "Hello, World!"
 
-@app.route('/status')
+
+@app.route("/status")
 def get_status():
     """
     Returns basic information about the API status.
@@ -82,13 +86,24 @@ def get_status():
     }
     return jsonify(status_data)
 
-app.register_error_handler(exceptions.InvalidPayloadException, error_handlers.handle_exception)
-app.register_error_handler(exceptions.BadRequestException, error_handlers.handle_exception)
-app.register_error_handler(exceptions.UnauthorizedException, error_handlers.handle_exception)
-app.register_error_handler(exceptions.ForbiddenException, error_handlers.handle_exception)
-app.register_error_handler(exceptions.NotFoundException, error_handlers.handle_exception)
-app.register_error_handler(exceptions.ServerErrorException, error_handlers.handle_exception)
+
+app.register_error_handler(
+    exceptions.InvalidPayloadException, error_handlers.handle_exception
+)
+app.register_error_handler(
+    exceptions.BadRequestException, error_handlers.handle_exception
+)
+app.register_error_handler(
+    exceptions.UnauthorizedException, error_handlers.handle_exception
+)
+app.register_error_handler(
+    exceptions.ForbiddenException, error_handlers.handle_exception
+)
+app.register_error_handler(
+    exceptions.NotFoundException, error_handlers.handle_exception
+)
+app.register_error_handler(
+    exceptions.ServerErrorException, error_handlers.handle_exception
+)
 app.register_error_handler(Exception, error_handlers.handle_general_exception)
 app.register_error_handler(HTTPException, error_handlers.handle_werkzeug_exception)
-
-
