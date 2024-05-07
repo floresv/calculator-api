@@ -29,11 +29,19 @@ def get_date(date: str) -> datetime:
     """
     Convert str to date in a specific format
     """
-    return datetime.strptime(date, current_app.config.get('DATE_FORMAT'))
+    date_format = current_app.config.get('DATE_FORMAT')
+    if date_format is not None:
+        return datetime.strptime(date, date_format)
+    else:
+        raise ValueError("DATE_FORMAT is not configured correctly")
 
 
 def get_date_str(date: datetime) -> str:
     """
     Convert date to str in a specific format
     """
-    return date.strftime(current_app.config.get('DATE_FORMAT'))
+    date_format = current_app.config.get('DATE_FORMAT')
+    if date_format is not None:
+        return date.strftime(date_format)
+    else:
+        raise ValueError("DATE_FORMAT is not configured correctly")

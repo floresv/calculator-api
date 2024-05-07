@@ -10,5 +10,4 @@
 
 #     echo "PostgreSQL started"
 # fi
-source .env.dev
 exec "$@"

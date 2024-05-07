@@ -1,9 +1,11 @@
 from __future__ import annotations
 from datetime import datetime
+from flask import jsonify
 from .. import db
 
 
-class Base(db.Model):
+class Base(db.Model):  # type: ignore
+
     """
     Base model
     """
@@ -49,12 +51,12 @@ class Base(db.Model):
         return cls.query.get(_id)
 
     # This must be overridden by derived classes
-    def json(self) -> json:
+    def json(self) -> dict:
         """
         Get model data in JSON format
         """
         return {
             'id': self.id,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at
+            'created_at': str(self.created_at),
+            'updated_at': str(self.updated_at)
         }
