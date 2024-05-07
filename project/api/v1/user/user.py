@@ -13,18 +13,18 @@ bp = Blueprint("user", __name__)
 def signup():
     data = request.get_json()
 
-    if not data or not data.get('username') or not data.get('password'):
-        return jsonify({'error': 'Missing username or password'}), 400
+    if not data or not data.get("username") or not data.get("password"):
+        return jsonify({"error": "Missing username or password"}), 400
 
-    username = data['username']
-    password = data['password']
+    username = data["username"]
+    password = data["password"]
 
     existing_user = User.query.filter_by(username=username).first()
     if existing_user:
-        return jsonify({'error': 'Username already exists'}), 400
+        return jsonify({"error": "Username already exists"}), 400
 
     user = User(username, password)
     db.session.add(user)
     db.session.commit()
 
-    return jsonify({'message': 'User created successfully'}), 201
+    return jsonify({"message": "User created successfully"}), 201
