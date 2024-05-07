@@ -1,6 +1,6 @@
-from .user import user_blueprint
+from .user import bp
 
 """
 Add your user blueprints here
 """
-user_blueprints = [user_blueprint]
+user_blueprints = [bp]
