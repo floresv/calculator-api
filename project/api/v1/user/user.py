@@ -11,6 +11,9 @@ bp = Blueprint("user", __name__)
 
 @bp.route("/users", methods=["POST"])
 def signup():
+    """
+    Sign up a new user.
+    """
     data = request.get_json()
 
     if not data or not data.get("username") or not data.get("password"):
