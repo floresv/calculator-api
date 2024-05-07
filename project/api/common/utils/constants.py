@@ -4,4 +4,4 @@ class Constants:
     """
 
     class HttpHeaders:
-        AUTHORIZATION = 'Authorization'
+        AUTHORIZATION = "Authorization"

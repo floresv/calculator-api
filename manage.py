@@ -9,18 +9,12 @@ import unittest
 
 cli = FlaskGroup(app)
 
-COV = coverage.coverage(
-    branch=True,
-    include='project/*',
-    omit=[
-        'project/static/*'
-    ]
-)
+COV = coverage.coverage(branch=True, include="project/*", omit=["project/static/*"])
 COV.start()
 
 
 @cli.command("recreate_db")
-def recreate_db():
+def recreate_db() -> None:
     """
     Recreates the database
     """
@@ -31,7 +25,7 @@ def recreate_db():
 
 
 @cli.command("create_db")
-def create_db():
+def create_db() -> None:
     """
     Create the database
     """
@@ -41,34 +35,28 @@ def create_db():
 
 
 @cli.command("seed_db")
-def seed_db():
+def seed_db() -> None:
     """
     Seed the database
     """
-    group = Group(name="Group Name")
-    db.session.add(group)
-    user1 = User(username='admin', name="Admin", email='admin@arsal.me', password="password")
-    user2 = User(username='user', name="User", email='teamleader@arsal.me', password="password")
+    user1 = User(username="admin", password="password")
+    user2 = User(username="user", password="password")
     db.session.add(user1)
     db.session.add(user2)
-    user_group_association1 = UserGroupAssociation(user=user1, group=group)
-    db.session.add(user_group_association1)
-    user_group_association2 = UserGroupAssociation(user=user2, group=group)
-    db.session.add(user_group_association2)
     db.session.commit()
 
 
 @cli.command()
-def cov():
+def cov() -> int:
     """
     Run the unit tests with coverage
     """
-    tests = unittest.TestLoader().discover('tests')
+    tests = unittest.TestLoader().discover("tests")
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():
         COV.stop()
         COV.save()
-        print('Coverage Summary:')
+        print("Coverage Summary:")
         COV.report()
         COV.html_report()
         COV.erase()

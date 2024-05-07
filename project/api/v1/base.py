@@ -5,8 +5,12 @@ from typing import Type
 
 from ...models.base import Base
 from ... import db
-from ..common.utils.exceptions import NotFoundException, InvalidPayloadException, BadRequestException, \
-    ValidationException
+from ..common.utils.exceptions import (
+    NotFoundException,
+    InvalidPayloadException,
+    BadRequestException,
+    ValidationException,
+)
 from ..common.utils.helpers import session_scope
 
 
