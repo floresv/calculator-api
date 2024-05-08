@@ -21,6 +21,8 @@ jobs:
         run: pip3 install -r requirements.txt
       - name: Install flake8
         run: pip3 install flake8
+      - name: Install mypy
+        run: pip3 install mypy
       - name: Run black to format code --check .
         run: black --check .
       - name: If needed, commit black changes to the pull request
@@ -40,6 +42,8 @@ jobs:
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      - name: Run mypy to check static types
+        run: mypy .
       - name: Run unittests
         run: python3 -m unittest discover -s tests/
         env:

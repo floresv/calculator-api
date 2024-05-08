@@ -14,6 +14,7 @@ from ....models.user import User
 from ....api.common.utils.helpers import session_scope
 from ..validations.auth.core import UserRegister, UserLogin
 from werkzeug.security import generate_password_hash
+import jwt
 
 bp = Blueprint("auth", __name__)
 
@@ -33,10 +34,9 @@ def login():
     if not user or not user.verify_password(password):
         return jsonify({"error": "Invalid credentials"}), 401
 
-    # Generate a secure session token (replace with a JWT or similar for more robust authentication)
-    session_token = generate_password_hash(
-        f"{username}{password}", method="pbkdf2:sha256", salt_length=8
-    )
+    # Generate a secure session token
+    payload = {'username': user.username}
+    session_token = jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256')
 
     # Return the session token in the response (consider a more secure approach like JWT)
     return jsonify({"session_token": session_token})

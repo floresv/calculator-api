@@ -9,7 +9,7 @@ import unittest
 
 cli = FlaskGroup(app)
 
-COV = coverage.coverage(branch=True, include="project/*", omit=["project/static/*"])
+COV = coverage.coverage(branch=True, include="project/*")
 COV.start()
 
 

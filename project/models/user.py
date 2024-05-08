@@ -13,7 +13,7 @@ class User(Base):
     User model
     """
 
-    __tablename__ = "user"
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(128), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=True)
@@ -43,6 +43,7 @@ class User(Base):
             "status": self.status,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
+            "balance": self.get_balance()
         }
 
     def set_password(self, password):
@@ -50,3 +51,6 @@ class User(Base):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def get_balance(self):
+        return 0

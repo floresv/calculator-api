@@ -19,9 +19,9 @@ def add_user(
     Generates a fake user to add in DB
     """
     if username is None:
-        username = data_generator.email()
+        username = data_generator.username()
     if password is None:
-        password = data_generator.email()
+        password = data_generator.password()
     if created_at is None:
         created_at = datetime.now()
 
@@ -31,22 +31,14 @@ def add_user(
     return user
 
 
-def add_user_password(
-    username: Optional[str] = None,
-    password: Optional[str] = None,
-    created_at: Optional[datetime] = None,
-) -> tuple[User, str]:
-    """
-    Generates a fake user to add in DB and return User, password tuple
-    """
-    if username is None:
-        username = data_generator.email()
-    if password is None:
-        password = data_generator.email()
-    if created_at is None:
-        created_at = datetime.now()
-
-    user = User(username=username, password=password, created_at=created_at)
-    db.session.add(user)
-    db.session.commit()
-    return user, password
+def successful_login(self, user: Optional[User] = None):
+    password = data_generator.password()
+    if user is None:
+        user = add_user(password=password)
+    else:
+        user.set_password(password=password)
+    data = {
+        "username": user.username,
+        "password": password
+    }
+    return self.client.post("/v1/login", json=data)
