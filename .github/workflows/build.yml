@@ -45,6 +45,6 @@ jobs:
       - name: Run mypy to check static types
         run: mypy .
       - name: Run unittests
-        run: python3 -m unittest discover -s tests/
+        run: python3 manage.py cov
         env:
           FLASK_ENV: testing
