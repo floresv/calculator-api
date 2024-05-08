@@ -35,8 +35,10 @@ def login():
         return jsonify({"error": "Invalid credentials"}), 401
 
     # Generate a secure session token
-    payload = {'username': user.username}
-    session_token = jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256')
+    payload = {"username": user.username}
+    session_token = jwt.encode(
+        payload, current_app.config["SECRET_KEY"], algorithm="HS256"
+    )
 
     # Return the session token in the response (consider a more secure approach like JWT)
     return jsonify({"session_token": session_token})

@@ -11,7 +11,7 @@ class BaseTestCase(unittest.TestCase):
     client = app.test_client()
 
     def create_app(self):
-        app.config.from_object('project.config.TestingConfig')
+        app.config.from_object("project.config.TestingConfig")
         return app
 
     def setUp(self):
@@ -23,5 +23,5 @@ class BaseTestCase(unittest.TestCase):
         db.drop_all()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

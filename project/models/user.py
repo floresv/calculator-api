@@ -43,7 +43,7 @@ class User(Base):
             "status": self.status,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
-            "balance": self.get_balance()
+            "balance": self.get_balance(),
         }
 
     def set_password(self, password):

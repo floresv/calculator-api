@@ -37,8 +37,5 @@ def successful_login(self, user: Optional[User] = None):
         user = add_user(password=password)
     else:
         user.set_password(password=password)
-    data = {
-        "username": user.username,
-        "password": password
-    }
+    data = {"username": user.username, "password": password}
     return self.client.post("/v1/login", json=data)

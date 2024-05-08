@@ -11,8 +11,9 @@ class TestUserModel(BaseTestCase):
     """
     Test User model
     """
+
     # Generate fake data with mimesis
-    data_generator = Person('en')
+    data_generator = Person("en")
 
     def test_model_user_add_user(self):
         """Ensure adding user model works"""
@@ -28,8 +29,7 @@ class TestUserModel(BaseTestCase):
         """Ensure adding user with duplicate username does not work"""
         user = add_user()
         duplicate_user = User(
-            username=user.username,
-            password=self.data_generator.password()
+            username=user.username, password=self.data_generator.password()
         )
         db.session.add(duplicate_user)
         self.assertRaises(IntegrityError, db.session.commit)
