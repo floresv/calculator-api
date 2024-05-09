@@ -7,8 +7,17 @@ from project import db
 from project.models.user import User
 from tests.base import BaseTestCase
 from project.api.common.utils.constants import Constants
-from tests.utils import add_user, successful_login, add_operation, finance_generator, send_record_creation_request
-from project.api.common.utils.exceptions import UnauthorizedException, BadRequestException
+from tests.utils import (
+    add_user,
+    successful_login,
+    add_operation,
+    finance_generator,
+    send_record_creation_request,
+)
+from project.api.common.utils.exceptions import (
+    UnauthorizedException,
+    BadRequestException,
+)
 
 
 class TestRecord(BaseTestCase):
@@ -17,7 +26,9 @@ class TestRecord(BaseTestCase):
         first_value = finance_generator.price(minimum=1, maximum=1000)
         second_value = finance_generator.price(minimum=1, maximum=1000)
         operation = add_operation(type="addition")
-        response = send_record_creation_request(self, first_value, second_value, operation.type)
+        response = send_record_creation_request(
+            self, first_value, second_value, operation.type
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
         self.assertEqual(response.json["result"], first_value + second_value)
@@ -26,7 +37,9 @@ class TestRecord(BaseTestCase):
         first_value = finance_generator.price(minimum=1, maximum=1000)
         second_value = finance_generator.price(minimum=1, maximum=1000)
         operation = add_operation(type="subtraction")
-        response = send_record_creation_request(self, first_value, second_value, operation.type)
+        response = send_record_creation_request(
+            self, first_value, second_value, operation.type
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
         self.assertEqual(response.json["result"], first_value - second_value)
@@ -35,7 +48,9 @@ class TestRecord(BaseTestCase):
         first_value = finance_generator.price(minimum=1, maximum=1000)
         second_value = finance_generator.price(minimum=1, maximum=1000)
         operation = add_operation(type="multiplication")
-        response = send_record_creation_request(self, first_value, second_value, operation.type)
+        response = send_record_creation_request(
+            self, first_value, second_value, operation.type
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
         self.assertEqual(response.json["result"], first_value * second_value)
@@ -44,7 +59,9 @@ class TestRecord(BaseTestCase):
         first_value = finance_generator.price(minimum=1, maximum=1000)
         second_value = finance_generator.price(minimum=1, maximum=1000)
         operation = add_operation(type="division")
-        response = send_record_creation_request(self, first_value, second_value, operation.type)
+        response = send_record_creation_request(
+            self, first_value, second_value, operation.type
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
         self.assertEqual(response.json["result"], first_value / second_value)
@@ -90,8 +107,10 @@ class TestRecord(BaseTestCase):
         self.assertTrue(response.json["error"])
 
     def test_add_record_failure_both_invalid_data_type(self):
-        first_value = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
-        second_value = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+        first_value = "".join(random.choices(string.ascii_letters + string.digits, k=8))
+        second_value = "".join(
+            random.choices(string.ascii_letters + string.digits, k=8)
+        )
         operation = add_operation(type="addition")
         response = send_record_creation_request(self, first_value, second_value, None)
         self.assertEqual(response.status_code, 400)
@@ -99,7 +118,7 @@ class TestRecord(BaseTestCase):
         self.assertTrue(response.json["error"])
 
     def test_add_record_failure_first_invalid_data_type(self):
-        first_value = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+        first_value = "".join(random.choices(string.ascii_letters + string.digits, k=8))
         second_value = random.randint(10, 30)
         operation = add_operation(type="addition")
         response = send_record_creation_request(self, first_value, second_value, None)
@@ -109,7 +128,9 @@ class TestRecord(BaseTestCase):
 
     def test_add_record_failure_second_invalid_data_type(self):
         first_value = random.randint(10, 30)
-        second_value = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+        second_value = "".join(
+            random.choices(string.ascii_letters + string.digits, k=8)
+        )
         operation = add_operation(type="addition")
         response = send_record_creation_request(self, first_value, second_value, None)
         self.assertEqual(response.status_code, 400)
@@ -128,7 +149,7 @@ class TestRecord(BaseTestCase):
     def test_add_record_failure_negative_square_root(self):
         first_value = finance_generator.price(minimum=-100, maximum=-1)
         operation = add_operation(type="square_root")
-        response = send_record_creation_request(self, first_value, '', operation.type)
+        response = send_record_creation_request(self, first_value, "", operation.type)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.content_type, "application/json")
         self.assertTrue(response.json["message"])
@@ -138,7 +159,8 @@ class TestRecord(BaseTestCase):
         user = add_user()
         response_login = successful_login(self, user)
         headers = {
-            Constants.HttpHeaders.AUTHORIZATION: "Bearer " + response_login.json["session_token"]
+            Constants.HttpHeaders.AUTHORIZATION: "Bearer "
+            + response_login.json["session_token"]
         }
         response = self.client.post("/v1/records", json={}, headers=headers)
         self.assertEqual(response.status_code, 400)
@@ -148,9 +170,7 @@ class TestRecord(BaseTestCase):
         first_value = finance_generator.price(minimum=1, maximum=1000)
         second_value = finance_generator.price(minimum=1, maximum=1000)
         operation = add_operation(type="addition")
-        headers = {
-            Constants.HttpHeaders.AUTHORIZATION: "Bearer invalid_token"
-        }
+        headers = {Constants.HttpHeaders.AUTHORIZATION: "Bearer invalid_token"}
         data = {
             "operation": operation.type,
             "first_value": first_value,
@@ -165,9 +185,7 @@ class TestRecord(BaseTestCase):
         first_value = finance_generator.price(minimum=1, maximum=1000)
         second_value = finance_generator.price(minimum=1, maximum=1000)
         operation = add_operation(type="addition")
-        headers = {
-            Constants.HttpHeaders.AUTHORIZATION: "Bearer invalid_token"
-        }
+        headers = {Constants.HttpHeaders.AUTHORIZATION: "Bearer invalid_token"}
         data = {
             "operation": operation.type,
             "first_value": first_value,
@@ -182,7 +200,9 @@ class TestRecord(BaseTestCase):
         first_value = finance_generator.price(minimum=1000000, maximum=10000000)
         second_value = finance_generator.price(minimum=1000000, maximum=10000000)
         operation = add_operation(type="addition")
-        response = send_record_creation_request(self, first_value, second_value, operation.type)
+        response = send_record_creation_request(
+            self, first_value, second_value, operation.type
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
         self.assertEqual(response.json["result"], first_value + second_value)
@@ -191,17 +211,21 @@ class TestRecord(BaseTestCase):
         first_value = finance_generator.price(minimum=-1000, maximum=-1)
         second_value = finance_generator.price(minimum=-1000, maximum=-1)
         operation = add_operation(type="addition")
-        response = send_record_creation_request(self, first_value, second_value, operation.type)
+        response = send_record_creation_request(
+            self, first_value, second_value, operation.type
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
         self.assertEqual(response.json["result"], first_value + second_value)
-        
+
     def test_get_list(self):
         first_value = finance_generator.price(minimum=1, maximum=1000)
         second_value = finance_generator.price(minimum=1, maximum=1000)
         operation = add_operation(type="addition")
         user = add_user()
-        response = send_record_creation_request(self, first_value, second_value, operation.type, user)
+        response = send_record_creation_request(
+            self, first_value, second_value, operation.type, user
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
         response_login = successful_login(self, user)
@@ -213,4 +237,7 @@ class TestRecord(BaseTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
         self.assertEqual(len(response.json["records"]), 1)
-        self.assertEqual(float(response.json["records"][0]["operation_response"]), first_value + second_value)
+        self.assertEqual(
+            float(response.json["records"][0]["operation_response"]),
+            first_value + second_value,
+        )

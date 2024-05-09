@@ -5,7 +5,10 @@ from project import db
 from project.models.user import User
 from tests.base import BaseTestCase
 from tests.utils import add_user, add_operation
-from project.api.common.utils.exceptions import UnauthorizedException, BadRequestException
+from project.api.common.utils.exceptions import (
+    UnauthorizedException,
+    BadRequestException,
+)
 
 
 class TestUserModel(BaseTestCase):
@@ -60,7 +63,9 @@ class TestUserModel(BaseTestCase):
     def test_charge_operation_failure(self):
         user = add_user()
         original_balance = user.get_balance()
-        operation = add_operation(operation_cost=self.finance_generator.price(minimum=(original_balance + 1)))
+        operation = add_operation(
+            operation_cost=self.finance_generator.price(minimum=(original_balance + 1))
+        )
         with self.assertRaises(BadRequestException):
             user.charge_operation(operation)
         self.assertEqual(user.balance, original_balance)
@@ -69,6 +74,8 @@ class TestUserModel(BaseTestCase):
         user = add_user()
         original_balance = user.get_balance()
         operation = add_operation()
-        result = user.add_record(operation=operation, result=self.finance_generator.price())
+        result = user.add_record(
+            operation=operation, result=self.finance_generator.price()
+        )
         self.assertTrue(result)
         self.assertEqual(user.records[-1].user_id, user.id)

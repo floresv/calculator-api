@@ -1,10 +1,13 @@
 import random
 import string
 import math
-from .api.common.utils.exceptions import NotImplementedException, InvalidPayloadException
+from .api.common.utils.exceptions import (
+    NotImplementedException,
+    InvalidPayloadException,
+)
 
 
-class Calculator():
+class Calculator:
     """
     Calculator
     """
@@ -36,19 +39,19 @@ class Calculator():
         Addition
         """
         return first_value + second_value
-    
+
     def subtraction(self, first_value, second_value):
         """
         Subtraction
         """
         return first_value - second_value
-    
+
     def multiplication(self, first_value, second_value):
         """
         Multiplication
         """
         return first_value * second_value
-    
+
     def division(self, first_value, second_value):
         """
         Division
@@ -68,10 +71,12 @@ class Calculator():
             return math.sqrt(first_value)
         except ValueError:
             raise InvalidPayloadException("Input must be positive")
-        return first_value ** 0.5
+        return first_value**0.5
 
     def random_string(self, first_value):
         """
         Random string
         """
-        return ''.join(random.choices(string.ascii_letters + string.digits, k=first_value))
+        return "".join(
+            random.choices(string.ascii_letters + string.digits, k=first_value)
+        )

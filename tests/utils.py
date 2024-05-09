@@ -32,7 +32,9 @@ def add_user(
     if created_at is None:
         created_at = datetime.now()
 
-    user = User(username=username, password=password, created_at=created_at, balance=balance)
+    user = User(
+        username=username, password=password, created_at=created_at, balance=balance
+    )
     db.session.add(user)
     db.session.commit()
     return user
@@ -63,14 +65,16 @@ def add_record(
         user_id=user.id,
         operation_id=operation.id,
         user_balance=balance,
-        operation_response="Success"
+        operation_response="Success",
     )
     db.session.add(record)
     db.session.commit()
     return record
 
 
-def add_operation(operation_cost: Optional[float] = None, type: str = "addition") -> Operation:
+def add_operation(
+    operation_cost: Optional[float] = None, type: str = "addition"
+) -> Operation:
     if operation_cost is None:
         operation_cost = finance_generator.price(minimum=1, maximum=100)
     operation = Operation(type=type, cost=operation_cost)
@@ -79,12 +83,19 @@ def add_operation(operation_cost: Optional[float] = None, type: str = "addition"
     return operation
 
 
-def send_record_creation_request(self, first_value: float, second_value: float, operation_name: Optional[str] = None, user: Optional[User] = None) -> None:
+def send_record_creation_request(
+    self,
+    first_value: float,
+    second_value: float,
+    operation_name: Optional[str] = None,
+    user: Optional[User] = None,
+) -> None:
     if user is None:
         user = add_user()
     response_login = successful_login(self, user)
     headers = {
-        Constants.HttpHeaders.AUTHORIZATION: "Bearer " + response_login.json["session_token"]
+        Constants.HttpHeaders.AUTHORIZATION: "Bearer "
+        + response_login.json["session_token"]
     }
     data = {
         "operation": operation_name,

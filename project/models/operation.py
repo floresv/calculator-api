@@ -17,7 +17,9 @@ class Operation(Base):
     records = db.relationship("Record", back_populates="operation")
 
     def __init__(
-        self, type: str | None = None, cost: float | None = None,
+        self,
+        type: str | None = None,
+        cost: float | None = None,
         created_at: datetime = datetime.now(),
         updated_at: datetime = datetime.now(),
     ):
@@ -29,11 +31,7 @@ class Operation(Base):
         """
         Get operation data in JSON format
         """
-        return {
-            "id": self.id,
-            "type": self.type,
-            "cost": self.cost
-        }
+        return {"id": self.id, "type": self.type, "cost": self.cost}
 
 
 from .record import Record

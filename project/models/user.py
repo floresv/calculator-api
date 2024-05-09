@@ -71,7 +71,7 @@ class User(Base):
             operation_id=operation.id,
             amount=operation.cost,
             user_balance=self.get_balance(),
-            operation_response=result
+            operation_response=result,
         )
         if self.id != record.user_id:
             raise UnauthorizedException("You can only add records for your own user")

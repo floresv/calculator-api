@@ -18,14 +18,18 @@ class Record(Base):
     operation_response = db.Column(db.String(255), nullable=False)
 
     # Foreign relationships
-    operation_id = db.Column(db.Integer, db.ForeignKey('operations.id'), nullable=False)
+    operation_id = db.Column(db.Integer, db.ForeignKey("operations.id"), nullable=False)
     operation = db.relationship("Operation", back_populates="records")
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     user = db.relationship("User", back_populates="records")
-    
+
     def __init__(
-        self, amount, user_id, operation_id,
-        user_balance, operation_response,
+        self,
+        amount,
+        user_id,
+        operation_id,
+        user_balance,
+        operation_response,
         created_at: datetime = datetime.now(),
         updated_at: datetime = datetime.now(),
     ):
@@ -43,7 +47,7 @@ class Record(Base):
             "user_balance": self.user_balance,
             "operation_response": self.operation_response,
             "operation": self.operation.type,
-            "user_id": self.user_id
+            "user_id": self.user_id,
         }
 
 

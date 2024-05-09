@@ -30,4 +30,3 @@ class TestOperationModel(BaseTestCase):
         assert record_json["operation"] == record.operation.type
         assert record_json["user_balance"] == record.user_balance
         assert record_json["operation_response"] == record.operation_response
-
