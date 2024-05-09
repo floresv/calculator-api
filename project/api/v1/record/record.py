@@ -3,7 +3,7 @@ from flask import request, current_app, jsonify, Blueprint
 from ..base import token_required
 from ....models.record import Record
 from ....models.operation import Operation
-from ...common.utils.exceptions import NotImplementedException
+from ...common.utils.exceptions import NotImplementedException, NotFoundException
 from .... import db
 from project.calculator import Calculator
 
@@ -51,5 +51,15 @@ def add(current_user):
 @bp.route("/records", methods=["GET"])
 @token_required
 def get_list(current_user):
-    records = current_user.records
+    records = current_user.records_non_deleted()
     return jsonify({"records": [record.json() for record in records]}), 200
+
+
+@bp.route("/records/<int:record_id>", methods=["DELETE"])
+@token_required
+def delete_record(current_user, record_id):
+    record = Record.first_by(id=record_id, user_id=current_user.id)
+    if not record:
+        raise NotFoundException("Record not found")
+    record.delete()
+    return jsonify({'message': 'Record deleted successfully'}), 200

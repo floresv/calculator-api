@@ -4,7 +4,7 @@
 max-line-length = 120
 exclude = __init__.py,migrations/*,tests/*
 # Ignore specific warnings (adjust as needed)
-ignore = E203,E402
+ignore = E203,E402  
 
 # PEP 8 style guide
 # Note: You can adjust some options here based on your preferences
