@@ -1,6 +1,7 @@
 import random
 import string
-from .api.common.utils.exceptions import NotImplementedException
+import math
+from .api.common.utils.exceptions import NotImplementedException, InvalidPayloadException
 
 
 class Calculator():
@@ -52,14 +53,23 @@ class Calculator():
         """
         Division
         """
-        return first_value / second_value
-    
+        try:
+            return first_value / second_value
+        except ZeroDivisionError:
+            raise ValueError("Cannot divide by zero")
+        except TypeError:
+            raise TypeError("Inputs must be numbers")
+
     def square_root(self, first_value):
         """
         Square root
         """
+        try:
+            return math.sqrt(first_value)
+        except ValueError:
+            raise InvalidPayloadException("Input must be positive")
         return first_value ** 0.5
-    
+
     def random_string(self, first_value):
         """
         Random string

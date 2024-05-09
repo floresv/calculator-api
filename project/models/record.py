@@ -42,7 +42,7 @@ class Record(Base):
             "amount": self.amount,
             "user_balance": self.user_balance,
             "operation_response": self.operation_response,
-            "operation_id": self.operation_id,
+            "operation": self.operation.type,
             "user_id": self.user_id
         }
 

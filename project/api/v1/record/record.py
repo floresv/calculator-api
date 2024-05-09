@@ -17,13 +17,16 @@ def add(current_user):
 
     if not data:
         return jsonify({'error': 'Missing params'}), 400
-    if not data or not data.get('first_value') or not data.get('second_value'):
+    if not data or not data.get('first_value'):
         return jsonify({'error': 'Missing numbers'}), 400
     if not data.get('operation'):
         return jsonify({'error': 'Missing operation'}), 400
 
+    if data.get('second_value'):
+        num2 = data['second_value']
+    else:
+        num2 = None
     num1 = data['first_value']
-    num2 = data['second_value']
     operation = Operation.query.filter_by(type=data['operation']).first()
     if not operation:
         return jsonify({'error': 'Invalid operation'}), 400
@@ -41,3 +44,10 @@ def add(current_user):
         return jsonify({'error': 'Invalid data types'}), 400
     except NotImplementedException:
         return jsonify({'error': 'Operation not implemented'}), 400
+
+
+@bp.route("/records", methods=['GET'])
+@token_required
+def get_list(current_user):
+    records = current_user.records
+    return jsonify({"records": [record.json() for record in records]}), 200

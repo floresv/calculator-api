@@ -34,8 +34,9 @@ class TestOperationModel(BaseTestCase):
             db.session.commit()
 
     def test_model_operation_json(self):
-        operation = add_operation()
+        operation_name = "addition"
+        operation = add_operation(type=operation_name)
         record_json = operation.json()
         assert record_json["id"] == operation.id
-        assert record_json["type"] == "Add"
+        assert record_json["type"] == operation_name
         assert record_json["cost"] == operation.cost

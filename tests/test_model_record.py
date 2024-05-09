@@ -27,7 +27,7 @@ class TestOperationModel(BaseTestCase):
         record_json = record.json()
         assert record_json["amount"] == record.amount
         assert record_json["user_id"] == record.user_id
-        assert record_json["operation_id"] == record.operation_id
+        assert record_json["operation"] == record.operation.type
         assert record_json["user_balance"] == record.user_balance
         assert record_json["operation_response"] == record.operation_response
 

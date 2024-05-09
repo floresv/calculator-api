@@ -7,6 +7,7 @@ from project import db, app
 from project.models.user import User
 from project.models.record import Record
 from project.models.operation import Operation
+from project.api.common.utils.constants import Constants
 
 data_generator = Person("en")
 data_generator_text = Text()
@@ -49,9 +50,11 @@ def successful_login(self, user: Optional[User] = None):
 
 def add_record(
     operation_cost: Optional[float] = None,
-    balance: Optional[float] = None
+    balance: Optional[float] = None,
+    user: Optional[User] = None,
 ) -> Record:
-    user = add_user()
+    if user is None:
+        user = add_user()
     operation = add_operation(operation_cost)
     if balance is None:
         balance = finance_generator.price()
@@ -67,10 +70,26 @@ def add_record(
     return record
 
 
-def add_operation(operation_cost: Optional[float] = None):
+def add_operation(operation_cost: Optional[float] = None, type: str = "addition") -> Operation:
     if operation_cost is None:
         operation_cost = finance_generator.price(minimum=1, maximum=100)
-    operation = Operation(type="Add", cost=operation_cost)
+    operation = Operation(type=type, cost=operation_cost)
     db.session.add(operation)
     db.session.commit()
     return operation
+
+
+def send_record_creation_request(self, first_value: float, second_value: float, operation_name: Optional[str] = None, user: Optional[User] = None) -> None:
+    if user is None:
+        user = add_user()
+    response_login = successful_login(self, user)
+    headers = {
+        Constants.HttpHeaders.AUTHORIZATION: "Bearer " + response_login.json["session_token"]
+    }
+    data = {
+        "operation": operation_name,
+        "first_value": first_value,
+        "second_value": second_value,
+    }
+    response = self.client.post("/v1/records", json=data, headers=headers)
+    return response
