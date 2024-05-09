@@ -62,4 +62,4 @@ def delete_record(current_user, record_id):
     if not record:
         raise NotFoundException("Record not found")
     record.delete()
-    return jsonify({'message': 'Record deleted successfully'}), 200
+    return jsonify({"message": "Record deleted successfully"}), 200

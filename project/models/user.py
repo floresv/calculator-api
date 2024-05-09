@@ -79,7 +79,12 @@ class User(Base):
         return record
 
     def records_non_deleted(self):
-        return Record.query.filter(Record.deleted_at.is_(None)).join(User).filter(User.id == self.id).all()
+        return (
+            Record.query.filter(Record.deleted_at.is_(None))
+            .join(User)
+            .filter(User.id == self.id)
+            .all()
+        )
 
 
 from .record import Record
