@@ -4,7 +4,7 @@ from mimesis import Finance
 from project import db
 from project.models.operation import Operation
 from tests.base import BaseTestCase
-from utils import add_operation
+from app.utils import add_operation # type: ignore
 
 
 class TestOperationModel(BaseTestCase):
