@@ -34,6 +34,7 @@ def add(current_user):
         current_user.charge_operation(operation=operation)
         result = Calculator().operation(first_value=num1, second_value=num2, operation=operation.type)
         current_user.add_record(operation=operation, result=result)
+        db.session.commit()
         current_app.logger.info(f'Record added successfully')
         return jsonify({'result': result}), 200
     except TypeError:

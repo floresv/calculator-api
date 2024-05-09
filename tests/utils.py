@@ -16,6 +16,7 @@ finance_generator = Finance()
 def add_user(
     username: Optional[str] = None,
     password: Optional[str] = None,
+    balance: Optional[float] = None,
     created_at: Optional[datetime] = None,
 ) -> User:
     """
@@ -25,10 +26,12 @@ def add_user(
         username = data_generator.username()
     if password is None:
         password = data_generator.password()
+    if balance is None:
+        balance = finance_generator.price(minimum=100.0, maximum=1000.0)
     if created_at is None:
         created_at = datetime.now()
 
-    user = User(username=username, password=password, created_at=created_at)
+    user = User(username=username, password=password, created_at=created_at, balance=balance)
     db.session.add(user)
     db.session.commit()
     return user
@@ -66,7 +69,7 @@ def add_record(
 
 def add_operation(operation_cost: Optional[float] = None):
     if operation_cost is None:
-        operation_cost = finance_generator.price()
+        operation_cost = finance_generator.price(minimum=1, maximum=100)
     operation = Operation(type="Add", cost=operation_cost)
     db.session.add(operation)
     db.session.commit()

@@ -27,7 +27,7 @@ class User(Base):
         username: str,
         password: str | None = None,
         status: int = 1,
-        balance: int = 100,
+        balance: float = 100.0,
         created_at: datetime = datetime.now(),
         updated_at: datetime = datetime.now(),
     ):
@@ -76,7 +76,7 @@ class User(Base):
         if self.id != record.user_id:
             raise UnauthorizedException("You can only add records for your own user")
         self.records.append(record)
-        db.session.commit()
+        return record
 
 
 from .record import Record
