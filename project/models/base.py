@@ -16,6 +16,7 @@ class Base(db.Model):  # type: ignore
     updated_at = db.Column(
         db.DateTime, nullable=False, default=datetime.now(), onupdate=datetime.now()
     )
+    deleted_at = db.Column(db.DateTime, nullable=True)
 
     def __init__(
         self,
@@ -30,7 +31,7 @@ class Base(db.Model):  # type: ignore
         """
         Get first entity that matches to criterion
         """
-        return cls.query.filter_by(**kwargs).first()
+        return cls.query.filter_by(deleted_at=None, **kwargs).first()
 
     @classmethod
     def first(cls, *criterion) -> Base:
@@ -63,3 +64,10 @@ class Base(db.Model):  # type: ignore
             "created_at": str(self.created_at),
             "updated_at": str(self.updated_at),
         }
+
+    def delete(self) -> None:
+        """
+        Delete the entity
+        """
+        self.deleted_at = datetime.now()
+        db.session.commit()

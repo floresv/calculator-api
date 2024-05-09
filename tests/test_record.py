@@ -13,6 +13,7 @@ from tests.utils import (
     add_operation,
     finance_generator,
     send_record_creation_request,
+    add_record,
 )
 from project.api.common.utils.exceptions import (
     UnauthorizedException,
@@ -241,3 +242,30 @@ class TestRecord(BaseTestCase):
             float(response.json["records"][0]["operation_response"]),
             first_value + second_value,
         )
+
+    # Delete record tests
+
+    def test_delete_record_success(self):
+        user = add_user()
+        record = add_record(user=user)
+        response_login = successful_login(self, user)
+        headers = {
+            Constants.HttpHeaders.AUTHORIZATION: "Bearer "
+            + response_login.json["session_token"]
+        }
+        response = self.client.delete("/v1/records/" + str(record.id), headers=headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content_type, "application/json")
+        self.assertTrue(response.json["message"])
+
+    def test_delete_record_not_found(self):
+        user = add_user()
+        response_login = successful_login(self, user)
+        headers = {
+            Constants.HttpHeaders.AUTHORIZATION: "Bearer "
+            + response_login.json["session_token"]
+        }
+        response = self.client.delete("/v1/records/1", headers=headers)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.content_type, "application/json")
+        self.assertTrue(response.json["message"])

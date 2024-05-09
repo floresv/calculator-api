@@ -78,6 +78,14 @@ class User(Base):
         self.records.append(record)
         return record
 
+    def records_non_deleted(self):
+        return (
+            Record.query.filter(Record.deleted_at.is_(None))
+            .join(User)
+            .filter(User.id == self.id)
+            .all()
+        )
+
 
 from .record import Record
 from .operation import Operation
