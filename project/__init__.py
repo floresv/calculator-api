@@ -35,8 +35,9 @@ def create_app():
     # apply the blueprints to the app
     from .api.v1.auth import auth_blueprints
     from .api.v1.user import user_blueprints
+    from .api.v1.record import record_blueprints
 
-    blueprints = [*auth_blueprints, *user_blueprints]
+    blueprints = [*auth_blueprints, *user_blueprints, *record_blueprints]
     for blueprint in blueprints:
         app.register_blueprint(blueprint, url_prefix="/v1")
 
