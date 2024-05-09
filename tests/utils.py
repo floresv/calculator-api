@@ -1,13 +1,16 @@
 from __future__ import annotations
 from datetime import datetime
 from typing import Optional
-from mimesis import Person, Text
+from mimesis import Person, Text, Finance
 
 from project import db, app
 from project.models.user import User
+from project.models.record import Record
+from project.models.operation import Operation
 
 data_generator = Person("en")
 data_generator_text = Text()
+finance_generator = Finance()
 
 
 def add_user(
@@ -39,3 +42,32 @@ def successful_login(self, user: Optional[User] = None):
         user.set_password(password=password)
     data = {"username": user.username, "password": password}
     return self.client.post("/v1/login", json=data)
+
+
+def add_record(
+    operation_cost: Optional[float] = None,
+    balance: Optional[float] = None
+) -> Record:
+    user = add_user()
+    operation = add_operation(operation_cost)
+    if balance is None:
+        balance = finance_generator.price()
+    record = Record(
+        amount=operation.cost,
+        user_id=user.id,
+        operation_id=operation.id,
+        user_balance=balance,
+        operation_response="Success"
+    )
+    db.session.add(record)
+    db.session.commit()
+    return record
+
+
+def add_operation(operation_cost: Optional[float] = None):
+    if operation_cost is None:
+        operation_cost = finance_generator.price()
+    operation = Operation(type="Add", cost=operation_cost)
+    db.session.add(operation)
+    db.session.commit()
+    return operation

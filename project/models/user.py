@@ -18,7 +18,8 @@ class User(Base):
     username = db.Column(db.String(128), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=True)
     status = db.Column(db.Integer, default=True, nullable=False)
-    token_hash = db.Column(db.String(255), nullable=True)
+    # token_hash = db.Column(db.String(255), nullable=True)
+    records = db.relationship("Record", back_populates="user")
 
     def __init__(
         self,
@@ -54,3 +55,7 @@ class User(Base):
 
     def get_balance(self):
         return 0
+
+
+from .record import Record
+from .operation import Operation

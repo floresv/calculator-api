@@ -4,6 +4,7 @@ from flask.cli import FlaskGroup
 
 from project import app, db
 from project.models.user import User
+from project.models.operation import Operation
 
 import unittest
 
@@ -41,6 +42,11 @@ def seed_db() -> None:
     """
     user1 = User(username="admin", password="password")
     user2 = User(username="user", password="password")
+    operation1 = Operation(type="addition", cost=10)
+    operation2 = Operation(type="subtraction", cost=10)
+    operation3 = Operation(type="multiplication", cost=10)
+    operation4 = Operation(type="square_root", cost=10)
+    operation5 = Operation(type="random_string", cost=10)
     db.session.add(user1)
     db.session.add(user2)
     db.session.commit()
