@@ -1,7 +1,8 @@
 from flask import request, current_app, jsonify, Blueprint
 
 from ..base import token_required
-from ....models.user import Record
+from ....models.record import Record
+from ....models.operation import Operation
 from ...common.utils.exceptions import NotImplementedException
 from .... import db
 from project.calculator import Calculator
@@ -10,9 +11,8 @@ bp = Blueprint("record", __name__)
 
 
 @bp.route('/records', methods=['POST'])
-# @token_required
-# def add(current_user):
-def add():
+@token_required
+def add(current_user):
     data = request.get_json()
 
     if not data:
@@ -24,10 +24,17 @@ def add():
 
     num1 = data['first_value']
     num2 = data['second_value']
-    operation = data['operation']
+    operation = Operation.query.filter_by(type=data['operation']).first()
+    if not operation:
+        return jsonify({'error': 'Invalid operation'}), 400
+    if current_user.get_balance() < operation.cost:
+        return jsonify({'error': 'Insufficient balance'}), 400
 
     try:
-        result = Calculator().operation(first_value=num1, second_value=num2, operation=operation)
+        current_user.charge_operation(operation=operation)
+        result = Calculator().operation(first_value=num1, second_value=num2, operation=operation.type)
+        current_user.add_record(operation=operation, result=result)
+        current_app.logger.info(f'Record added successfully')
         return jsonify({'result': result}), 200
     except TypeError:
         return jsonify({'error': 'Invalid data types'}), 400

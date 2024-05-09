@@ -20,12 +20,14 @@ class User(Base):
     status = db.Column(db.Integer, default=True, nullable=False)
     # token_hash = db.Column(db.String(255), nullable=True)
     records = db.relationship("Record", back_populates="user")
+    balance = db.Column(db.Float, default=0, nullable=False)
 
     def __init__(
         self,
         username: str,
         password: str | None = None,
         status: int = 1,
+        balance: int = 100,
         created_at: datetime = datetime.now(),
         updated_at: datetime = datetime.now(),
     ):
@@ -33,6 +35,7 @@ class User(Base):
         self.username = username
         self.set_password(password)
         self.status = status
+        self.balance = balance
 
     def json(self) -> dict:
         """
@@ -54,7 +57,26 @@ class User(Base):
         return check_password_hash(self.password_hash, password)
 
     def get_balance(self):
-        return 0
+        return self.balance
+
+    def charge_operation(self, operation: Operation):
+        if self.get_balance() < operation.cost:
+            raise BadRequestException("You can't add a record with a negative amount")
+        self.balance = self.get_balance() - operation.cost
+        return self.balance
+
+    def add_record(self, operation: Operation, result: float):
+        record = Record(
+            user_id=self.id,
+            operation_id=operation.id,
+            amount=operation.cost,
+            user_balance=self.get_balance(),
+            operation_response=result
+        )
+        if self.id != record.user_id:
+            raise UnauthorizedException("You can only add records for your own user")
+        self.records.append(record)
+        db.session.commit()
 
 
 from .record import Record
