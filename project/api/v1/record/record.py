@@ -62,12 +62,17 @@ def get_list(current_user):
     operation_type = request.args.get("filter_by_operation_type", None, type=str)
     amount = request.args.get("filter_by_amount", None, type=float)
     user_balance = request.args.get("filter_by_user_balance", None, type=float)
-    operation_response = request.args.get("filter_by_operation_response", None, type=str)
-    
+    operation_response = request.args.get(
+        "filter_by_operation_response", None, type=str
+    )
+
     try:
         records = current_user.records_non_deleted(
-            page=page, per_page=per_page, sort_by=sort_by,
-            sort_order=sort_order, amount=amount,
+            page=page,
+            per_page=per_page,
+            sort_by=sort_by,
+            sort_order=sort_order,
+            amount=amount,
             operation_type=operation_type,
             user_balance=user_balance,
             operation_response=operation_response,

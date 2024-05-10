@@ -329,7 +329,7 @@ class TestRecord(BaseTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertTrue(len(response.json["records"]) <= page_size)
-        
+
     def test_get_list_filter_by_operation_response(self):
         num_records = 2
         user = add_user()
@@ -353,7 +353,6 @@ class TestRecord(BaseTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json["records"]), 1)
-        
 
     # Delete record tests
 
