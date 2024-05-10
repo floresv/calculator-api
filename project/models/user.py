@@ -78,12 +78,26 @@ class User(Base):
         self.records.append(record)
         return record
 
-    def records_non_deleted(self):
+    def records_non_deleted(
+        self,
+        page: int = 1,
+        per_page: int = 10,
+        sort_by: str = "id",
+        sort_order: str = "asc",
+    ):
+        """
+        Get user records
+        """
         return (
             Record.query.filter(Record.deleted_at.is_(None))
             .join(User)
             .filter(User.id == self.id)
-            .all()
+            .order_by(
+                getattr(Record, sort_by).asc()
+                if sort_order == "asc"
+                else getattr(Record, sort_by).desc()
+            )
+            .paginate(page=page, per_page=per_page, error_out=False)
         )
 
 

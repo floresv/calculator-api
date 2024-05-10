@@ -32,7 +32,10 @@ class TestRecord(BaseTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
-        self.assertEqual(response.json["result"], first_value + second_value)
+        self.assertEqual(
+            float(response.json["record"]["operation_response"]),
+            first_value + second_value,
+        )
 
     def test_add_record_success_subtraction(self):
         first_value = finance_generator.price(minimum=1, maximum=1000)
@@ -43,7 +46,10 @@ class TestRecord(BaseTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
-        self.assertEqual(response.json["result"], first_value - second_value)
+        self.assertEqual(
+            float(response.json["record"]["operation_response"]),
+            first_value - second_value,
+        )
 
     def test_add_record_success_multiplication(self):
         first_value = finance_generator.price(minimum=1, maximum=1000)
@@ -54,7 +60,10 @@ class TestRecord(BaseTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
-        self.assertEqual(response.json["result"], first_value * second_value)
+        self.assertEqual(
+            float(response.json["record"]["operation_response"]),
+            first_value * second_value,
+        )
 
     def test_add_record_success_division(self):
         first_value = finance_generator.price(minimum=1, maximum=1000)
@@ -65,7 +74,10 @@ class TestRecord(BaseTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
-        self.assertEqual(response.json["result"], first_value / second_value)
+        self.assertEqual(
+            float(response.json["record"]["operation_response"]),
+            first_value / second_value,
+        )
 
     def test_add_record_success_square_root(self):
         first_value = finance_generator.price(minimum=1, maximum=1000)
@@ -73,7 +85,9 @@ class TestRecord(BaseTestCase):
         response = send_record_creation_request(self, first_value, None, operation.type)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
-        self.assertEqual(response.json["result"], math.sqrt(first_value))
+        self.assertEqual(
+            float(response.json["record"]["operation_response"]), math.sqrt(first_value)
+        )
 
     def test_add_record_success_random_string(self):
         first_value = random.randint(10, 30)
@@ -81,7 +95,7 @@ class TestRecord(BaseTestCase):
         response = send_record_creation_request(self, first_value, None, operation.type)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
-        self.assertTrue(response.json["result"])
+        self.assertTrue(response.json["record"]["operation_response"])
 
     def test_add_record_failure_invalid_operation(self):
         first_value = random.randint(10, 30)
@@ -206,7 +220,10 @@ class TestRecord(BaseTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
-        self.assertEqual(response.json["result"], first_value + second_value)
+        self.assertEqual(
+            float(response.json["record"]["operation_response"]),
+            first_value + second_value,
+        )
 
     def test_add_record_success_negative_numbers(self):
         first_value = finance_generator.price(minimum=-1000, maximum=-1)
@@ -217,7 +234,12 @@ class TestRecord(BaseTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, "application/json")
-        self.assertEqual(response.json["result"], first_value + second_value)
+        self.assertEqual(
+            float(response.json["record"]["operation_response"]),
+            first_value + second_value,
+        )
+
+    # GET records
 
     def test_get_list(self):
         first_value = finance_generator.price(minimum=1, maximum=1000)
@@ -242,6 +264,71 @@ class TestRecord(BaseTestCase):
             float(response.json["records"][0]["operation_response"]),
             first_value + second_value,
         )
+
+    def test_get_list_unauthorized(self):
+        response = self.client.get("/v1/records")
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.content_type, "application/json")
+        self.assertTrue(response.json["error"])
+
+    def test_get_list_with_pagination(self):
+        page_size = 2
+        num_records = 5
+        num_pages = num_records // page_size + 1
+        user = add_user()
+        operation = add_operation()
+        response_login = successful_login(self, user)
+        headers = {
+            Constants.HttpHeaders.AUTHORIZATION: "Bearer "
+            + response_login.json["session_token"]
+        }
+        records = []
+        for i in range(num_records):
+            first_value = finance_generator.price()
+            second_value = finance_generator.price()
+            response = send_record_creation_request(
+                self, first_value, second_value, operation.type, user
+            )
+            records.append(response.json["record"])
+        for i in range(num_pages):
+            response = self.client.get(
+                f"/v1/records?page={i+1}&per_page={page_size}", headers=headers
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertTrue(len(response.json["records"]) <= page_size)
+            for j in range(page_size):
+                if i * page_size + j < num_records:
+                    self.assertEqual(
+                        response.json["records"][j]["id"],
+                        records[i * page_size + j]["id"],
+                    )
+            self.assertEqual(response.json["total"], num_records)
+            self.assertEqual(response.json["pages"], num_pages)
+            self.assertEqual(response.json["current_page"], i + 1)
+
+    def test_get_list_order_by_amount(self):
+        page_size = 2
+        num_records = 5
+        num_pages = num_records // page_size + 1
+        user = add_user()
+        operation = add_operation()
+        response_login = successful_login(self, user)
+        headers = {
+            Constants.HttpHeaders.AUTHORIZATION: "Bearer "
+            + response_login.json["session_token"]
+        }
+        for i in range(num_records):
+            first_value = finance_generator.price()
+            second_value = finance_generator.price()
+            response = send_record_creation_request(
+                self, first_value, second_value, operation.type, user
+            )
+        response = self.client.get(
+            f"/v1/records?page={i+1}&per_page={page_size}&order_by=amount&order=desc",
+            headers=headers,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(len(response.json["records"]) <= page_size)
 
     # Delete record tests
 
