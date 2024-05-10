@@ -84,13 +84,25 @@ class User(Base):
         per_page: int = 10,
         sort_by: str = "id",
         sort_order: str = "asc",
+        operation_type: str | None = None,
+        amount: float | None = None,
+        user_balance: float | None = None,
+        operation_response: str | None = None,
     ):
         """
         Get user records
         """
+        query = Record.query.filter(Record.deleted_at.is_(None))
+        if operation_type:
+            query = query.join(Operation).filter(Operation.type == operation_type)
+        if amount:
+            query = query.filter(Record.amount == amount)
+        if user_balance:
+            query = query.filter(Record.user_balance == user_balance)
+        if operation_response:
+            query = query.filter(Record.operation_response == operation_response)
         return (
-            Record.query.filter(Record.deleted_at.is_(None))
-            .join(User)
+            query.join(User)
             .filter(User.id == self.id)
             .order_by(
                 getattr(Record, sort_by).asc()

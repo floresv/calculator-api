@@ -330,6 +330,30 @@ class TestRecord(BaseTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(len(response.json["records"]) <= page_size)
 
+    def test_get_list_filter_by_operation_response(self):
+        num_records = 2
+        user = add_user()
+        operation = add_operation()
+        response_login = successful_login(self, user)
+        headers = {
+            Constants.HttpHeaders.AUTHORIZATION: "Bearer "
+            + response_login.json["session_token"]
+        }
+        records = []
+        for i in range(num_records):
+            first_value = finance_generator.price()
+            second_value = finance_generator.price()
+            response = send_record_creation_request(
+                self, first_value, second_value, operation.type, user
+            )
+            records.append(response.json["record"])
+        response = self.client.get(
+            f"/v1/records?filter_by_operation_response={records[0]['operation_response']}",
+            headers=headers,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json["records"]), 1)
+
     # Delete record tests
 
     def test_delete_record_success(self):

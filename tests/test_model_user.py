@@ -64,7 +64,9 @@ class TestUserModel(BaseTestCase):
         user = add_user()
         original_balance = user.get_balance()
         operation = add_operation(
-            operation_cost=self.finance_generator.price(minimum=(original_balance + 1))
+            operation_cost=self.finance_generator.price(
+                minimum=(original_balance + 10_000)
+            )
         )
         with self.assertRaises(BadRequestException):
             user.charge_operation(operation)
