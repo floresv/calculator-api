@@ -28,7 +28,7 @@ def add_user(
     if password is None:
         password = data_generator.password()
     if balance is None:
-        balance = finance_generator.price(minimum=100.0, maximum=1000.0)
+        balance = finance_generator.price(minimum=1_000.0, maximum=10_000.0)
     if created_at is None:
         created_at = datetime.now()
 
