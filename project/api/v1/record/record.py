@@ -3,7 +3,11 @@ from flask import request, current_app, jsonify, Blueprint
 from ..base import token_required
 from ....models.record import Record
 from ....models.operation import Operation
-from ...common.utils.exceptions import NotImplementedException, NotFoundException, BadRequestException
+from ...common.utils.exceptions import (
+    NotImplementedException,
+    NotFoundException,
+    BadRequestException,
+)
 from .... import db
 from project.calculator import Calculator
 
@@ -51,29 +55,30 @@ def add(current_user):
 @bp.route("/records", methods=["GET"])
 @token_required
 def get_list(current_user):
-    page = request.args.get('page', 1, type=int)
-    per_page = request.args.get('per_page', 10, type=int)
-    sort_by = request.args.get('sort_by', 'id', type=str)
-    sort_order = request.args.get('sort_order', 'asc', type=str)
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 10, type=int)
+    sort_by = request.args.get("sort_by", "id", type=str)
+    sort_order = request.args.get("sort_order", "asc", type=str)
     try:
-        records = current_user.records_non_deleted(page=page, per_page=per_page, sort_by=sort_by, sort_order=sort_order)
+        records = current_user.records_non_deleted(
+            page=page, per_page=per_page, sort_by=sort_by, sort_order=sort_order
+        )
     except Exception as e:
         return BadRequestException(message=str(e)).to_dict(), 400
     data = {
-        'records': [record.json() for record in records.items],
-        'total': records.total,
-        'pages': records.pages,
-        'current_page': records.page,
-        'per_page': per_page,
-        'next_page': records.next_num,
-        'prev_page': records.prev_num,
-        'has_next': records.has_next,
-        'has_prev': records.has_prev,
-        'sort_by': sort_by,
-        'sort_order': sort_order,
+        "records": [record.json() for record in records.items],
+        "total": records.total,
+        "pages": records.pages,
+        "current_page": records.page,
+        "per_page": per_page,
+        "next_page": records.next_num,
+        "prev_page": records.prev_num,
+        "has_next": records.has_next,
+        "has_prev": records.has_prev,
+        "sort_by": sort_by,
+        "sort_order": sort_order,
     }
     return jsonify(data), 200
-
 
 
 @bp.route("/records/<int:record_id>", methods=["DELETE"])
