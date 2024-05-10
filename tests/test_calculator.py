@@ -40,3 +40,15 @@ class TestCalculator(unittest.TestCase):
         self.assertEqual(len(result), 5)
         result = Calculator().random_string(10)
         self.assertEqual(len(result), 10)
+
+    def test_random_string_invalid_length(self):
+        with self.assertRaises(InvalidPayloadException):
+            Calculator().random_string(-5)
+
+    def test_random_string_zero_length(self):
+        with self.assertRaises(InvalidPayloadException):
+            Calculator().random_string(0)
+
+    def test_random_string_non_integer_length(self):
+        with self.assertRaises(InvalidPayloadException):
+            Calculator().random_string("a")

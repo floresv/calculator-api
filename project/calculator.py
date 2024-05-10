@@ -1,6 +1,7 @@
 import random
 import string
 import math
+from services.random_service import RandomService
 from .api.common.utils.exceptions import (
     NotImplementedException,
     InvalidPayloadException,
@@ -77,6 +78,8 @@ class Calculator:
         """
         Random string
         """
-        return "".join(
-            random.choices(string.ascii_letters + string.digits, k=first_value)
-        )
+        if not isinstance(first_value, int):
+            raise InvalidPayloadException("Length must be an integer")
+        if first_value <= 0:
+            raise InvalidPayloadException("Length must be positive")
+        return "".join(RandomService().generate_random_string({"len": first_value}))
