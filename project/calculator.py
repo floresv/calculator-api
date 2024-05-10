@@ -82,6 +82,4 @@ class Calculator:
             raise InvalidPayloadException("Length must be an integer")
         if first_value <= 0:
             raise InvalidPayloadException("Length must be positive")
-        return "".join(
-            RandomService().generate_random_string({"len": first_value})
-        )
+        return "".join(RandomService().generate_random_string({"len": first_value}))

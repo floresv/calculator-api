@@ -15,7 +15,7 @@ class RandomService:
             "loweralpha": "on",
             "unique": "on",
             "format": "plain",
-            "rnd": "new"
+            "rnd": "new",
         }
 
     def generate_random_string(self, params={}) -> str:
@@ -23,11 +23,13 @@ class RandomService:
         Get random string
         """
         merged_params = {**self.base_params(), **params}
-        params_url = '&'.join([f"{key}={value}" for key, value in merged_params.items()])
+        params_url = "&".join(
+            [f"{key}={value}" for key, value in merged_params.items()]
+        )
         service_url = self.base_api_url + "/strings/?"
 
         response = requests.get(service_url + params_url)
         if response.status_code == 200:
-            return response.text.replace('\n', '')
+            return response.text.replace("\n", "")
         else:
             raise Exception(f"Error fetching random string: {response.status_code}")

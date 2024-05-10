@@ -1,6 +1,7 @@
 import unittest
 from services.random_service import RandomService
 
+
 class TestRandomService(unittest.TestCase):
 
     def test_generate_random_string_valid_length(self):
@@ -12,4 +13,3 @@ class TestRandomService(unittest.TestCase):
         service = RandomService()
         with self.assertRaises(Exception):
             service.generate_random_string({"len": 0})
-
