@@ -38,18 +38,25 @@ def add(current_user):
         return jsonify({"error": "Insufficient balance"}), 400
 
     try:
-        current_user.charge_operation(operation=operation)
-        result = Calculator().operation(
-            first_value=num1, second_value=num2, operation=operation.type
-        )
-        record = current_user.add_record(operation=operation, result=result)
-        db.session.commit()
+        # Flask-SQLAlchemy automatically start a transaction within the request context.
+        try:
+            current_user.charge_operation(operation=operation)
+            result = Calculator().operation(
+                first_value=num1, second_value=num2, operation=operation.type
+            )
+            record = current_user.add_record(operation=operation, result=result)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e  # Re-raise the exception to propagate it
         current_app.logger.info(f"Record added successfully")
         return jsonify({"record": record.json()}), 200
     except TypeError:
         return jsonify({"error": "Invalid data types"}), 400
     except NotImplementedException:
         return jsonify({"error": "Operation not implemented"}), 400
+    except Exception as e:
+        return jsonify({"message": f"An error occurred: {str(e)}"}), 400
 
 
 @bp.route("/records", methods=["GET"])
