@@ -3,6 +3,7 @@ from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from .api.common.base_definitions import BaseFlask
 from sqlalchemy import text
+from flask_cors import CORS
 
 # flask config
 # conf = Config(root_path=os.path.abspath(os.path.dirname(__file__)))
@@ -29,6 +30,8 @@ def create_app():
 
     # register the database commands
     from . import db
+    
+    cors = CORS(app, resources={r"/v1/*": {"origins": "*"}})
 
     db.init_app(app)
 
