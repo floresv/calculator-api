@@ -20,7 +20,6 @@ class Calculator:
         """
         Perform operation
         """
-        breakpoint()
         if first_value is not None and not isinstance(first_value, (int, float)):
             first_value = float(first_value)
         if second_value is not None and not isinstance(second_value, (int, float)):
