@@ -30,7 +30,7 @@ def create_app():
 
     # register the database commands
     from . import db
-    
+
     cors = CORS(app, resources={r"/v1/*": {"origins": "*"}})
 
     db.init_app(app)
