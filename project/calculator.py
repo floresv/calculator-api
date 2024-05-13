@@ -20,9 +20,10 @@ class Calculator:
         """
         Perform operation
         """
+        breakpoint()
         if first_value is not None and not isinstance(first_value, (int, float)):
             first_value = float(first_value)
-        if second_value is not None and not isinstance(first_value, (int, float)):
+        if second_value is not None and not isinstance(second_value, (int, float)):
             second_value = float(second_value)
         if operation == "addition":
             return self.addition(first_value, second_value)
