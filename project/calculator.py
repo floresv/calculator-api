@@ -20,6 +20,10 @@ class Calculator:
         """
         Perform operation
         """
+        if first_value is not None and not isinstance(first_value, (int, float)):
+            first_value = float(first_value)
+        if second_value is not None and not isinstance(second_value, (int, float)):
+            second_value = float(second_value)
         if operation == "addition":
             return self.addition(first_value, second_value)
         elif operation == "subtraction":
@@ -82,4 +86,6 @@ class Calculator:
             raise InvalidPayloadException("Length must be an integer")
         if first_value <= 0:
             raise InvalidPayloadException("Length must be positive")
+        if first_value > 32:
+            raise InvalidPayloadException("Length must be less than 32 characters")
         return "".join(RandomService().generate_random_string({"len": first_value}))
