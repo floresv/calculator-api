@@ -40,8 +40,8 @@ def seed_db() -> None:
     """
     Seed the database
     """
-    user1 = User(username="admin", password="password")
-    user2 = User(username="user", password="password")
+    user1 = User(username="admin", password="password", balance=10_000)
+    user2 = User(username="user", password="password", balance=10_000)
     operation1 = Operation(type="addition", cost=10)
     operation2 = Operation(type="subtraction", cost=10)
     operation3 = Operation(type="multiplication", cost=10)

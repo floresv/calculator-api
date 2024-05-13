@@ -35,6 +35,8 @@ class Calculator:
         elif operation == "square_root":
             return self.square_root(first_value)
         elif operation == "random_string":
+            if first_value.is_integer():
+                first_value = int(first_value)
             return self.random_string(first_value)
         else:
             raise NotImplementedException("Operation not implemented")
