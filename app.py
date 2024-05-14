@@ -68,6 +68,7 @@ from project.api.common import error_handlers
 
 app = create_app()
 
+
 @app.route("/")
 def hello():
     return "Hello, World!"
@@ -106,4 +107,3 @@ app.register_error_handler(
 )
 app.register_error_handler(Exception, error_handlers.handle_general_exception)
 app.register_error_handler(HTTPException, error_handlers.handle_werkzeug_exception)
-
