@@ -14,6 +14,7 @@ db = SQLAlchemy()
 
 app = Flask(__name__)
 
+
 def create_app():
     """Create and configure an instance of the Flask application."""
     app.config.from_prefixed_env()
