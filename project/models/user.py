@@ -85,8 +85,8 @@ class User(Base):
         sort_by: str = "id",
         sort_order: str = "asc",
         operation_type: str | None = None,
-        amount: float | None = None,
-        user_balance: float | None = None,
+        amount: str | None = None,
+        user_balance: str | None = None,
         operation_response: str | None = None,
     ):
         """
@@ -94,13 +94,13 @@ class User(Base):
         """
         query = Record.query.filter(Record.deleted_at.is_(None))
         if operation_type:
-            query = query.join(Operation).filter(Operation.type == operation_type)
+            query = query.join(Operation).filter(Operation.type.like('%' + operation_type + '%'))
         if amount:
             query = query.filter(Record.amount == amount)
         if user_balance:
             query = query.filter(Record.user_balance == user_balance)
         if operation_response:
-            query = query.filter(Record.operation_response == operation_response)
+            query = query.filter(Record.operation_response.like('%' + operation_response + '%'))
         return (
             query.join(User)
             .filter(User.id == self.id)

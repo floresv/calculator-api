@@ -67,8 +67,8 @@ def get_list(current_user):
     sort_by = request.args.get("sort_by", "id", type=str)
     sort_order = request.args.get("sort_order", "asc", type=str)
     operation_type = request.args.get("filter_by_operation_type", None, type=str)
-    amount = request.args.get("filter_by_amount", None, type=float)
-    user_balance = request.args.get("filter_by_user_balance", None, type=float)
+    amount = request.args.get("filter_by_amount", None, type=str)
+    user_balance = request.args.get("filter_by_user_balance", None, type=str)
     operation_response = request.args.get(
         "filter_by_operation_response", None, type=str
     )
