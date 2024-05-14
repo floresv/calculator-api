@@ -12,10 +12,10 @@ from flask_cors import CORS
 # instantiate the extensions
 db = SQLAlchemy()
 
+app = Flask(__name__)
 
 def create_app():
     """Create and configure an instance of the Flask application."""
-    app = Flask(__name__)
     app.config.from_prefixed_env()
     # app.config.from_mapping(
     #     # a default secret that should be overridden by instance config
