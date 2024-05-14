@@ -94,13 +94,17 @@ class User(Base):
         """
         query = Record.query.filter(Record.deleted_at.is_(None))
         if operation_type:
-            query = query.join(Operation).filter(Operation.type.like('%' + operation_type + '%'))
+            query = query.join(Operation).filter(
+                Operation.type.like("%" + operation_type + "%")
+            )
         if amount:
             query = query.filter(Record.amount == amount)
         if user_balance:
             query = query.filter(Record.user_balance == user_balance)
         if operation_response:
-            query = query.filter(Record.operation_response.like('%' + operation_response + '%'))
+            query = query.filter(
+                Record.operation_response.like("%" + operation_response + "%")
+            )
         return (
             query.join(User)
             .filter(User.id == self.id)
