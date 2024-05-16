@@ -3,7 +3,8 @@ from datetime import datetime
 from typing import Optional
 from mimesis import Person, Text, Finance
 
-from project import db, app
+from project import db
+from app import app
 from project.models.user import User
 from project.models.record import Record
 from project.models.operation import Operation
