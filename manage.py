@@ -2,9 +2,11 @@ import coverage
 
 from flask.cli import FlaskGroup
 
-from project import app, db
+
 from project.models.user import User
 from project.models.operation import Operation
+from project import db
+import app
 
 import unittest
 

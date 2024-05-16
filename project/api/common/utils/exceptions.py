@@ -1,4 +1,3 @@
-from pydantic import ValidationError
 
 
 class APIException(Exception):
@@ -30,25 +29,6 @@ class InvalidPayloadException(APIException):
         self, message: str = "Invalid Payload", payload=None, name="Invalid Payload"
     ):
         super().__init__(message=message, status_code=400, payload=payload, name=name)
-
-
-class ValidationException(InvalidPayloadException):
-    """
-    400 Invalid Payload Exception with Validation Errors
-    """
-
-    def __init__(self, e: ValidationError, message: str = "Validation Error"):
-        payload = dict(
-            {
-                "message": "validation errors",
-                "errors": [
-                    {"field": error["loc"][0], "message": error["msg"]}
-                    for error in e.errors()
-                ],
-            }
-        )
-        super().__init__(message=message, payload=payload)
-
 
 class BadRequestException(APIException):
     """

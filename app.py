@@ -1,11 +1,6 @@
-import os
 from flask import Flask, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import text
 from flask_cors import CORS
-
-# instantiate the extensions
-db = SQLAlchemy()
+from project import db, is_database_connected
 
 
 def create_app():
@@ -18,55 +13,28 @@ def create_app():
     #     # store the database in the instance folder
     #     DATABASE=os.path.join(app.instance_path, "flaskr.sqlite"),
     # )
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
-
-    # register the database commands
-    from . import db
-
-    cors = CORS(app, resources={r"/v1/*": {"origins": "*"}})
+    # try:
+    #     os.makedirs(app.instance_path)
+    # except OSError:
+    #     pass
 
     db.init_app(app)
 
-    # apply the blueprints to the app
+    cors = CORS(app, resources={r"/v1/*": {"origins": "*"}})
+
     from project.api.v1.auth import auth_blueprints
     from project.api.v1.user import user_blueprints
     from project.api.v1.record import record_blueprints
-
+    # apply the blueprints to the app
     blueprints = [*auth_blueprints, *user_blueprints, *record_blueprints]
     for blueprint in blueprints:
         app.register_blueprint(blueprint, url_prefix="/v1")
 
-    # make url_for('index') == url_for('blog.index')
-    # app.add_url_rule("/", endpoint="index")
-
     return app
 
 
-def is_database_connected():
-    """
-    Attempts a connection to the database and returns True if successful.
-    """
-    try:
-        with db.engine.connect() as conn:
-            result = conn.execute(text("SELECT 1"))
-            result.close()  # Close the cursor explicitly
-            return True
-    except Exception as e:
-        print(f"Database connection error: {e}")
-    return False
-
-
-# register error handlers
-from werkzeug.exceptions import HTTPException
-
-from project.api.common.utils import exceptions
-from project.api.common import error_handlers
-
-
 app = create_app()
+
 
 @app.route("/")
 def hello():
@@ -86,6 +54,11 @@ def get_status():
     return jsonify(status_data)
 
 
+# register error handlers
+from werkzeug.exceptions import HTTPException
+
+from project.api.common.utils import exceptions
+from project.api.common import error_handlers
 app.register_error_handler(
     exceptions.InvalidPayloadException, error_handlers.handle_exception
 )
@@ -106,4 +79,3 @@ app.register_error_handler(
 )
 app.register_error_handler(Exception, error_handlers.handle_general_exception)
 app.register_error_handler(HTTPException, error_handlers.handle_werkzeug_exception)
-
