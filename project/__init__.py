@@ -4,6 +4,7 @@ from sqlalchemy import text
 # instantiate the extensions
 db = SQLAlchemy()
 
+
 def is_database_connected():
     """
     Attempts a connection to the database and returns True if successful.

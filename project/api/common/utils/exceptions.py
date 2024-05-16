@@ -1,5 +1,3 @@
-
-
 class APIException(Exception):
     """
     Base API Exception
@@ -29,6 +27,7 @@ class InvalidPayloadException(APIException):
         self, message: str = "Invalid Payload", payload=None, name="Invalid Payload"
     ):
         super().__init__(message=message, status_code=400, payload=payload, name=name)
+
 
 class BadRequestException(APIException):
     """

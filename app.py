@@ -25,6 +25,7 @@ def create_app():
     from project.api.v1.auth import auth_blueprints
     from project.api.v1.user import user_blueprints
     from project.api.v1.record import record_blueprints
+
     # apply the blueprints to the app
     blueprints = [*auth_blueprints, *user_blueprints, *record_blueprints]
     for blueprint in blueprints:
@@ -59,6 +60,7 @@ from werkzeug.exceptions import HTTPException
 
 from project.api.common.utils import exceptions
 from project.api.common import error_handlers
+
 app.register_error_handler(
     exceptions.InvalidPayloadException, error_handlers.handle_exception
 )
