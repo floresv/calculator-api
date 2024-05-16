@@ -1,6 +1,7 @@
 import unittest
 from flask import Flask
-from project import db, app
+from project import db
+from app import app
 
 
 class BaseTestCase(unittest.TestCase):
