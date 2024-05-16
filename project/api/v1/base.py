@@ -1,26 +1,13 @@
 from flask import request, current_app, jsonify
 from sqlalchemy import exc, text
-from pydantic import BaseModel, ValidationError
 from typing import Type
 from functools import wraps
 
+from ... import db
 from ...models.base import Base
 from ...models.user import User
-from ... import db
-from ..common.utils.exceptions import (
-    NotFoundException,
-    InvalidPayloadException,
-    BadRequestException,
-    ValidationException,
-)
-from ..common.utils.helpers import session_scope
+
 import jwt
-
-
-class BaseAPI:
-    def post(self):
-        """Standard POST call"""
-        post_data = "X"
 
 
 def token_required(func):

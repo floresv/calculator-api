@@ -1,7 +1,7 @@
 from flask import request, current_app, jsonify, Blueprint
 from flask.views import MethodView
 
-from ..base import BaseAPI, token_required
+from ..base import token_required
 from ....models.user import User
 from ...common.utils.exceptions import NotImplementedException
 from .... import db
